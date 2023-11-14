@@ -1,6 +1,6 @@
 [submodule "rolf"]
 	path = rolf
-	url = git@github.com:youngwoon/robot-learning.git
+	url = https://github.com/youngwoon/robot-learning.git
     branch = skimo
 [submodule "spirl"]
 	path = spirl
