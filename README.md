@@ -55,91 +55,27 @@ conda activate skimo_venv
 sh install.sh
 ```
 
+# Pre-trained Models
 
-## Download Offline Datasets
+We provide pre-trained model checkpoints in the kitchen, maze, and calvin environments. Using these models you can skip the pre-training step and directly run SkiMo on downstream tasks.
 
+To download model checkpoints, run:
 ```bash
-# Navigate to the data directory
-mkdir data && cd data
-
 # Maze
-gdown 1GWo8Vr8Xqj7CfJs7TaDsUA6ELno4grKJ
+mkdir -p log/maze.skimo.pretrain.test.0/ckpt
+cd log/maze.skimo.pretrain.test.0/ckpt
+gdown 162cmAz9E9D3DyfUSihItI5gae9Z_DdoY
+cd ../../..
 
-# Kitchen (and mis-aligned kitchen)
-gdown 1Fym9prOt5Cu_I73F20cdd3lXZPhrvEsd
 
-# CALVIN
-gdown 1g4ONf_3cNQtrZAo2uFa_t5MOopSr2DNY
-
-cd ..
-```
+Now, for downstream RL, you can simply run
+```bash
+# Maze
+python run.py --config-name skimo_maze run_prefix=test gpu=0 wandb=true rolf.phase=rl rolf.pretrain_ckpt_path=log/maze.skimo.pretrain.test.0/ckpt/maze_ckpt_00000140000.pt
 
 
 ## Usage
 Commands for SkiMo and all baselines. Results will be logged to [WandB](https://wandb.ai/site). Before running the commands below, **please change the wandb entity** in [run.py#L36](run.py#L36) to match your account.
-
-### Environment
-
-Please replace `[ENV]` with one of `maze`, `kitchen`, `calvin`. For mis-aligned kitchen, append `env.task=misaligned` to the downstream RL command.
-After pre-training, please set `[PRETRAINED_CKPT]` with the proper path to the checkpoint.
-
-### SkiMo (Ours)
-* Pre-training
-```bash
-python run.py --config-name skimo_[ENV] run_prefix=test gpu=0 wandb=true
-```
-You can also skip this step by downloading our pre-trained model checkpoints. See instructions in [pretrained_models.md](pretrained_models.md).
-
-* Downstream RL
-```bash
-python run.py --config-name skimo_[ENV] run_prefix=test gpu=0 wandb=true rolf.phase=rl rolf.pretrain_ckpt_path=[PRETRAINED_CKPT]
-```
-
-### Dreamer
-```bash
-python run.py --config-name dreamer_config env=[ENV] run_prefix=test gpu=0 wandb=true
-```
-
-### TD-MPC
-```bash
-python run.py --config-name tdmpc_config env=[ENV] run_prefix=test gpu=0 wandb=true
-```
-
-### SPiRL
-* Need to first pre-train or download the skill prior (see instructions [here](https://github.com/clvrai/spirl#example-commands)).
-* Downstream RL
-```bash
-python run.py --config-name spirl_config env=[ENV] run_prefix=test gpu=0 wandb=true
-```
-
-### SPiRL+Dreamer
-* Downstream RL
-```bash
-python run.py --config-name spirl_dreamer_[ENV] run_prefix=test gpu=0 wandb=true
-```
-
-### SPiRL+TD-MPC
-* Downstream RL
-```bash
-python run.py --config-name spirl_tdmpc_[ENV] run_prefix=test gpu=0 wandb=true
-```
-
-### SkiMo+SAC
-* Downstream RL
-```bash
-python run.py --config-name skimo_[ENV] run_prefix=sac gpu=0 wandb=true rolf.phase=rl rolf.use_cem=false rolf.n_skill=1 rolf.prior_reg_critic=true rolf.sac=true rolf.pretrain_ckpt_path=[PRETRAINED_CKPT]
-```
-
-### SkiMo w/o joint training
-* Pre-training
-```bash
-python run.py --config-name skimo_[ENV] run_prefix=no_joint gpu=0 wandb=true rolf.joint_training=false
-```
-
-* Downstream RL
-```
-python run.py --config-name skimo_[ENV] run_prefix=no_joint gpu=0 wandb=true rolf.joint_training=false rolf.phase=rl rolf.pretrain_ckpt_path=[PRETRAINED_CKPT]
-```
 
 
 ## Troubleshooting
