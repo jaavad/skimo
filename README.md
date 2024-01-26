@@ -5,6 +5,14 @@
 This project is a PyTorch implementation of [Skill-based Model-based Reinforcement Learning](https://clvrai.com/skimo), published in CoRL 2022.
 
 
+# Our Contribution 
+
+We implemented Skill Based Model Based Reinforcement Learning on D4RL PointMaze
+Environment. The method involves two primary phases:
+(1) learning the skill dynamics model and skills from an
+offline dataset, and (2) applying these learned skills in
+downstream task learning.
+
 ## Files and Directories
 * `run.py`: launches an appropriate trainer based on algorithm
 * `skill_trainer.py`: trainer for skill-based approaches
